@@ -2,77 +2,93 @@
  * Moses Muamba-Nzambi
  * CST - 250
  * 02/16/2026
- * Count To One Recursion
- * Activity 3
+ * Count To One Recursion - Challenges
  */
 
 using System;
 
 class Program
 {
-    // ------------------------------------------------------------
-    // Start of the Main Method
-    // ------------------------------------------------------------
     static void Main(string[] args)
     {
-        // Declare and initialize
-        int choice = 0, result = 0;
+        int choice = 0;
         string input = "";
 
-        // Prompt the user for a number
-        Console.Write("Enter a positive number: ");
+        Console.Write("Enter any integer (positive, negative, or zero): ");
         input = Console.ReadLine();
 
-        // Validate input
-        while (!int.TryParse(input, out choice) || choice <= 0)
+        while (!int.TryParse(input, out choice))
         {
             Console.WriteLine("Invalid number");
-            Console.Write("Enter a positive number: ");
+            Console.Write("Enter any integer: ");
             input = Console.ReadLine();
         }
 
-        // Call the CountToOne function
-        result = Utility.CountToOne(choice);
-        Console.WriteLine($"The end number is {result}");
+        int counter = 0;
+        int result = Utility.CountToOne(choice, ref counter);
+
+        Console.WriteLine($"\nThe end number is {result}");
+        Console.WriteLine($"Total recursive calls: {counter}");
     }
-    // ------------------------------------------------------------
-    // End of the Main Method
-    // ------------------------------------------------------------
 }
 
-// ------------------------------------------------------------
-// Start of the Utility class
-// ------------------------------------------------------------
 static class Utility
 {
-    /// <summary>
-    /// Count to one using recursion
-    /// </summary>
-    /// <param name="num"></param>
-    /// <returns></returns>
-    internal static int CountToOne(int num)
+    internal static int CountToOne(int num, ref int counter)
     {
-        // Print out the current number
-        Console.WriteLine($"The current number is {num}");
+        counter++; // Challenge 1: Count recursive calls
 
-        // Check if the number is 1
+        Console.WriteLine($"Step {counter}: Current number = {num}");
+
+        // Challenge 5: Handle 0
+        if (num == 0)
+        {
+            Console.WriteLine("Zero detected. Converting to 1.");
+            return 1;
+        }
+
+        // Challenge 5: Handle negative numbers
+        if (num < 0)
+        {
+            Console.WriteLine("Negative detected. Converting to positive.");
+            num = Math.Abs(num);
+        }
+
+        // Base case
         if (num == 1)
         {
             return 1;
         }
-        else
+
+        // Challenge 4: Multiply if divisible by 5
+        if (num % 5 == 0)
         {
-            // Check if the number is even
-            if ((num % 2) == 0)
-            {
-                Console.WriteLine("The number is even. Divide by 2");
-                return CountToOne(num / 2);
-            }
-            else
-            {
-                Console.WriteLine("The number is odd. Add 1");
-                return CountToOne(num + 1);
-            }
+            Console.WriteLine("Divisible by 5. Multiply by 2.");
+            return CountToOne(num * 2, ref counter);
         }
+
+        // Challenge 3: Divide by larger numbers first
+        if (num % 4 == 0)
+        {
+            Console.WriteLine("Divisible by 4. Divide by 4.");
+            return CountToOne(num / 4, ref counter);
+        }
+
+        if (num % 3 == 0)
+        {
+            Console.WriteLine("Divisible by 3. Divide by 3.");
+            return CountToOne(num / 3, ref counter);
+        }
+
+        // Even numbers
+        if (num % 2 == 0)
+        {
+            Console.WriteLine("Even number. Divide by 2.");
+            return CountToOne(num / 2, ref counter);
+        }
+
+        // Challenge 2: Instead of +1, subtract 1 for odd numbers
+        Console.WriteLine("Odd number. Subtract 1.");
+        return CountToOne(num - 1, ref counter);
     }
 }
